@@ -43,9 +43,8 @@ namespace negocio
                     aux.Categoria.Descripcion = (string)datos.Lector["Categoria"];
 
                     aux.UrlImagen = (string)datos.Lector["ImagenUrl"];
-                    aux.Precio = (decimal)datos.Lector["Precio"];
-                    string v = aux.Precio.ToString("0.0");
-                    aux.Precio = Decimal.Parse(v);
+                    aux.Precio = Math.Truncate((Decimal)datos.Lector["Precio"]*100)/100;
+                    
                     lista.Add(aux);
                 }
                 datos.cerrarConexion();
@@ -101,6 +100,35 @@ namespace negocio
 
                 throw ex;
             }
+        }
+
+        public void modificarArg(Articulo articulo)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.setearConsulta("update ARTICULOS set Codigo = @Codigo , Nombre = @Nombre,Descripcion = @Descripcion, ImagenUrl = @UrlImagen,Precio = @Precio, idMarca = @idMarca, idCategoria = @idCategoria where Id = @Id");
+                datos.setearParametros("@Codigo", articulo.Codigo);
+                datos.setearParametros("@Nombre", articulo.Nombre);
+                datos.setearParametros("@Descripcion", articulo.Descripcion);
+                datos.setearParametros("@UrlImagen", articulo.UrlImagen);
+                datos.setearParametros("@idMarca", articulo.Marca.id);
+                datos.setearParametros("@idCategoria", articulo.Categoria.id);
+                datos.setearParametros("@Precio", articulo.Precio);
+                datos.setearParametros("@Id", articulo.Id);
+                datos.ejecutarAccion();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+
         }
     }
 }

@@ -24,7 +24,7 @@ namespace TPFinalNivel2_Spalla
         {
             cargar();
         }
-
+        
         public void cargar()
         {
             ArticuloNegocio negocio = new ArticuloNegocio();
@@ -33,11 +33,9 @@ namespace TPFinalNivel2_Spalla
                 lista = negocio.listar();
                 dgvPrincipal.DataSource = lista;
                 ocultarColumnas();
-
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }
@@ -69,7 +67,6 @@ namespace TPFinalNivel2_Spalla
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
             
@@ -80,12 +77,20 @@ namespace TPFinalNivel2_Spalla
             frmAuxiliar agregar = new frmAuxiliar();
             agregar.ShowDialog();
             cargar();
-           
         }
 
         private void btnModificar_Click(object sender, EventArgs e)
         {
+            frmAuxiliar modificar = new frmAuxiliar((Articulo)dgvPrincipal.CurrentRow.DataBoundItem);
+            modificar.ShowDialog();
+            cargar();
+        }
 
+        private void btnDetalles_Click(object sender, EventArgs e)
+        {
+            frmAuxiliar modificar = new frmAuxiliar((Articulo)dgvPrincipal.CurrentRow.DataBoundItem, 1);
+            modificar.ShowDialog();
+            cargar();
         }
     }
 }
