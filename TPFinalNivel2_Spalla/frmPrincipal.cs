@@ -81,9 +81,9 @@ namespace TPFinalNivel2_Spalla
 
         private void btnModificar_Click(object sender, EventArgs e)
         {
+            cargar();
             frmAuxiliar modificar = new frmAuxiliar((Articulo)dgvPrincipal.CurrentRow.DataBoundItem);
             modificar.ShowDialog();
-            cargar();
         }
 
         private void btnDetalles_Click(object sender, EventArgs e)
@@ -91,6 +91,11 @@ namespace TPFinalNivel2_Spalla
             frmAuxiliar modificar = new frmAuxiliar((Articulo)dgvPrincipal.CurrentRow.DataBoundItem, 1);
             modificar.ShowDialog();
             cargar();
+        }
+
+        private void dgvPrincipal_SelectionChanged(object sender, EventArgs e)
+        {
+  
         }
     }
 }

@@ -190,7 +190,8 @@
             this.dgvPrincipal.RowTemplate.Height = 24;
             this.dgvPrincipal.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvPrincipal.Size = new System.Drawing.Size(667, 441);
-            this.dgvPrincipal.TabIndex = 3;
+            this.dgvPrincipal.TabIndex = 0;
+            this.dgvPrincipal.SelectionChanged += new System.EventHandler(this.dgvPrincipal_SelectionChanged);
             // 
             // frmPrincipal
             // 
