@@ -35,8 +35,9 @@
             this.btnModificar = new System.Windows.Forms.Button();
             this.btnAgregar = new System.Windows.Forms.Button();
             this.panelInferior = new System.Windows.Forms.Panel();
+            this.lblFiltro = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtFiltro = new System.Windows.Forms.TextBox();
             this.dgvPrincipal = new System.Windows.Forms.DataGridView();
             this.panelVertical.SuspendLayout();
             this.panelInferior.SuspendLayout();
@@ -144,8 +145,9 @@
             // panelInferior
             // 
             this.panelInferior.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(152)))), ((int)(((byte)(156)))), ((int)(((byte)(148)))));
+            this.panelInferior.Controls.Add(this.lblFiltro);
             this.panelInferior.Controls.Add(this.label1);
-            this.panelInferior.Controls.Add(this.textBox1);
+            this.panelInferior.Controls.Add(this.txtFiltro);
             this.panelInferior.Cursor = System.Windows.Forms.Cursors.Hand;
             this.panelInferior.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelInferior.Location = new System.Drawing.Point(0, 0);
@@ -153,29 +155,49 @@
             this.panelInferior.Size = new System.Drawing.Size(725, 603);
             this.panelInferior.TabIndex = 2;
             // 
+            // lblFiltro
+            // 
+            this.lblFiltro.AutoSize = true;
+            this.lblFiltro.Font = new System.Drawing.Font("Segoe Print", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblFiltro.Location = new System.Drawing.Point(195, 9);
+            this.lblFiltro.Name = "lblFiltro";
+            this.lblFiltro.Size = new System.Drawing.Size(362, 23);
+            this.lblFiltro.TabIndex = 2;
+            this.lblFiltro.Text = "Puede filtrar por código, nombre, marca o categoría.";
+            this.lblFiltro.Visible = false;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe Print", 10.2F, System.Drawing.FontStyle.Bold);
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(242)))), ((int)(((byte)(250)))));
-            this.label1.Location = new System.Drawing.Point(21, 29);
+            this.label1.Location = new System.Drawing.Point(16, 29);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(128, 30);
             this.label1.TabIndex = 1;
             this.label1.Text = "Filtro rapido:";
             // 
-            // textBox1
+            // txtFiltro
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.txtFiltro.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(242)))), ((int)(((byte)(250)))));
-            this.textBox1.Location = new System.Drawing.Point(131, 33);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(557, 22);
-            this.textBox1.TabIndex = 0;
+            this.txtFiltro.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(242)))), ((int)(((byte)(250)))));
+            this.txtFiltro.Location = new System.Drawing.Point(167, 35);
+            this.txtFiltro.Name = "txtFiltro";
+            this.txtFiltro.Size = new System.Drawing.Size(521, 22);
+            this.txtFiltro.TabIndex = 0;
+            this.txtFiltro.TextChanged += new System.EventHandler(this.txtFiltro_TextChanged);
+            this.txtFiltro.MouseLeave += new System.EventHandler(this.txtFiltro_MouseLeave);
+            this.txtFiltro.MouseHover += new System.EventHandler(this.txtFiltro_MouseHover);
             // 
             // dgvPrincipal
             // 
+            this.dgvPrincipal.AllowDrop = true;
+            this.dgvPrincipal.AllowUserToAddRows = false;
+            this.dgvPrincipal.AllowUserToDeleteRows = false;
+            this.dgvPrincipal.AllowUserToOrderColumns = true;
+            this.dgvPrincipal.AllowUserToResizeColumns = false;
+            this.dgvPrincipal.AllowUserToResizeRows = false;
             this.dgvPrincipal.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -184,6 +206,7 @@
             this.dgvPrincipal.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvPrincipal.Cursor = System.Windows.Forms.Cursors.Hand;
             this.dgvPrincipal.Location = new System.Drawing.Point(21, 71);
+            this.dgvPrincipal.MultiSelect = false;
             this.dgvPrincipal.Name = "dgvPrincipal";
             this.dgvPrincipal.ReadOnly = true;
             this.dgvPrincipal.RowHeadersWidth = 51;
@@ -191,7 +214,6 @@
             this.dgvPrincipal.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvPrincipal.Size = new System.Drawing.Size(667, 441);
             this.dgvPrincipal.TabIndex = 0;
-            this.dgvPrincipal.SelectionChanged += new System.EventHandler(this.dgvPrincipal_SelectionChanged);
             // 
             // frmPrincipal
             // 
@@ -224,9 +246,10 @@
         private System.Windows.Forms.Button btnDetalles;
         private System.Windows.Forms.Button btnEliminar;
         private System.Windows.Forms.Button btnModificar;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtFiltro;
         private System.Windows.Forms.Button btnCerrar;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblFiltro;
     }
 }
 

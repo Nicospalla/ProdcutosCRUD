@@ -28,7 +28,7 @@ namespace TPFinalNivel2_Spalla
 
         public frmAuxiliar(Articulo modificar, int bandera = 0)
         {
-            if(bandera ==0 ) {
+            if(bandera == 0) {
                 InitializeComponent();
                 this.modificar = modificar;
                 Text = "Modificar un Producto";
@@ -73,31 +73,30 @@ namespace TPFinalNivel2_Spalla
             ArticuloNegocio negocio = new ArticuloNegocio();
             if (modificar == null)
                 modificar = new Articulo();
-            else
-            {
+           
                 modificar.Codigo = txtCodigo.Text;
                 modificar.Nombre = txtNombre.Text;
                 modificar.Descripcion = txtDescripcion.Text;
-                modificar.Marca = (Marca)cboMarca.SelectedItem;
+            modificar.Marca = (Marca)cboMarca.SelectedItem;
                 modificar.Categoria = (Categoria)cboCategoria.SelectedItem;
                 modificar.UrlImagen = txtImagen.Text;
                 if (txtPrecio.Text.Contains("."))
                     modificar.Precio = Decimal.Parse(txtPrecio.Text.Replace(".", ","));
                 else
                     modificar.Precio = Decimal.Parse(txtPrecio.Text);
-            }
+            
             frmPrincipal frm = new frmPrincipal();
 
             try
             {
                 if (banderaDetalles == 0)
                 {
-                    if (modificar.Id == null)
+                    if (modificar.Id == 0)
                         negocio.agregarArg(modificar);
                     else
                         negocio.modificarArg(modificar);
                 }
-
+                
                 this.Close();
 
             }

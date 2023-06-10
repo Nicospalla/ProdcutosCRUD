@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using dominio;
@@ -15,6 +17,7 @@ namespace TPFinalNivel2_Spalla
     public partial class frmPrincipal : Form
     {
         private List<Articulo> lista;
+        
         public frmPrincipal()
         {
             InitializeComponent();
@@ -33,12 +36,16 @@ namespace TPFinalNivel2_Spalla
                 lista = negocio.listar();
                 dgvPrincipal.DataSource = lista;
                 ocultarColumnas();
+                lista.Sort((x, y) => string.Compare(x.Marca.Descripcion, y.Marca.Descripcion));
+
             }
             catch (Exception ex)
             {
                 throw ex;
             }
+            dgvPrincipal.Focus();
         }
+
         public void ocultarColumnas()
         {       
             dgvPrincipal.Columns["Id"].Visible = false;
@@ -81,9 +88,9 @@ namespace TPFinalNivel2_Spalla
 
         private void btnModificar_Click(object sender, EventArgs e)
         {
-            cargar();
             frmAuxiliar modificar = new frmAuxiliar((Articulo)dgvPrincipal.CurrentRow.DataBoundItem);
             modificar.ShowDialog();
+            cargar();
         }
 
         private void btnDetalles_Click(object sender, EventArgs e)
@@ -93,9 +100,42 @@ namespace TPFinalNivel2_Spalla
             cargar();
         }
 
-        private void dgvPrincipal_SelectionChanged(object sender, EventArgs e)
+        private void txtFiltro_TextChanged(object sender, EventArgs e)
         {
-  
+            List<Articulo> listaFiltrada;
+            string filtro = txtFiltro.Text.ToLower();
+            try
+            {
+                if(filtro.Length > 1)
+                {
+                    listaFiltrada = lista.FindAll(x => x.Codigo.ToLower().Contains(filtro) || x.Nombre.ToLower().Contains(filtro) || x.Marca.Descripcion.ToLower().Contains(filtro) || x.Categoria.Descripcion.ToLower().Contains(filtro));
+                }
+                else
+                {
+                    listaFiltrada = lista;
+                }
+                dgvPrincipal.DataSource = null;
+                dgvPrincipal.DataSource = listaFiltrada;
+                
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
+
+        private void txtFiltro_MouseHover(object sender, EventArgs e)
+        {
+            lblFiltro.Visible = true;
+        }
+
+        private void txtFiltro_MouseLeave(object sender, EventArgs e)
+        {
+            Thread.Sleep(400);
+            lblFiltro.Visible = false;
+        }
+
+
     }
 }
