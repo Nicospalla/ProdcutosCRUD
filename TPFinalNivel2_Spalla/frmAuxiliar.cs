@@ -70,6 +70,8 @@ namespace TPFinalNivel2_Spalla
 
         private void btnAgregar_Click(object sender, EventArgs e)
         {
+            
+
             ArticuloNegocio negocio = new ArticuloNegocio();
             if (modificar == null)
                 modificar = new Articulo();

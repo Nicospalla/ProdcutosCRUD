@@ -17,7 +17,9 @@ namespace TPFinalNivel2_Spalla
     public partial class frmPrincipal : Form
     {
         private List<Articulo> lista;
-        
+        ArticuloNegocio negocio = new ArticuloNegocio();
+        MarcaNegocio marcaNegocio = new MarcaNegocio(); 
+        CategoriaNegocio categoriaNegocio = new CategoriaNegocio();
         public frmPrincipal()
         {
             InitializeComponent();
@@ -26,32 +28,65 @@ namespace TPFinalNivel2_Spalla
         private void frmPrincipal_Load(object sender, EventArgs e)
         {
             cargar();
+            cboMarca.DataSource = marcaNegocio.listar();
+            cboMarca.ValueMember = "id";
+            cboMarca.DisplayMember = "Descripcion";
+            cboMarca.SelectedIndex = -1;
+            cboCat.DataSource = categoriaNegocio.listar();
+            cboCat.ValueMember = "id";
+            cboCat.DisplayMember = "Descripcion";
+            cboCat.SelectedIndex = -1;
+          
         }
-        
+
         public void cargar()
         {
-            ArticuloNegocio negocio = new ArticuloNegocio();
+            
             try
             {
                 lista = negocio.listar();
                 dgvPrincipal.DataSource = lista;
                 ocultarColumnas();
-                lista.Sort((x, y) => string.Compare(x.Marca.Descripcion, y.Marca.Descripcion));
-
             }
             catch (Exception ex)
             {
                 throw ex;
             }
             dgvPrincipal.Focus();
+
         }
 
         public void ocultarColumnas()
-        {       
+        {
             dgvPrincipal.Columns["Id"].Visible = false;
             dgvPrincipal.Columns["UrlImagen"].Visible = false;
         }
-
+        public void ordenarLista(int bandera)
+        {
+            List<Articulo> listaOrdenada;
+            if (bandera == 1)
+            {
+                listaOrdenada = lista;
+                lista.Sort((x, y) => string.Compare(x.Marca.Descripcion, y.Marca.Descripcion));
+                dgvPrincipal.DataSource = null;
+                dgvPrincipal.DataSource = lista;
+                ocultarColumnas();
+            }
+            else if(bandera == 2)
+            {
+                lista.Sort((x, y) => string.Compare(x.Categoria.Descripcion, y.Categoria.Descripcion));
+                dgvPrincipal.DataSource = null;
+                dgvPrincipal.DataSource = lista;
+                ocultarColumnas();
+            }
+            else if (bandera == 3)
+            {
+                lista.Sort((x, y) => Decimal.Compare(x.Precio, y.Precio));
+                dgvPrincipal.DataSource = null;
+                dgvPrincipal.DataSource = lista;
+                ocultarColumnas();
+            } 
+        }
         private void btnCerrar_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -61,46 +96,70 @@ namespace TPFinalNivel2_Spalla
         {
             ArticuloNegocio negocio = new ArticuloNegocio();
             Articulo seleccionado;
-
-            try
+            if (dgvPrincipal.CurrentRow != null)
             {
-                DialogResult resultado = MessageBox.Show("Seguro deseas eliminar el articulo?", "Eliminar articulo", MessageBoxButtons.YesNo);
-                if(resultado == DialogResult.Yes)
+                try
                 {
-                    seleccionado = (Articulo)dgvPrincipal.CurrentRow.DataBoundItem;
-                    negocio.eliminarArt(seleccionado.Id);
-                    cargar();
+                    DialogResult resultado = MessageBox.Show("Seguro deseas eliminar el articulo?", "Eliminar articulo", MessageBoxButtons.YesNo,MessageBoxIcon.Question);
+                    if (resultado == DialogResult.Yes)
+                    {
+                        seleccionado = (Articulo)dgvPrincipal.CurrentRow.DataBoundItem;
+                        negocio.eliminarArt(seleccionado.Id);
+                        cargar();
+                        dgvLimpieza();
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
                 }
             }
-            catch (Exception ex)
+            else
             {
-                throw ex;
+                MessageBox.Show("Por favor, selecciona algún item de la lista.", "Error al seleccionar producto", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            
         }
 
         private void btnAgregar_Click(object sender, EventArgs e)
         {
             frmAuxiliar agregar = new frmAuxiliar();
             agregar.ShowDialog();
+            dgvLimpieza();
             cargar();
         }
 
         private void btnModificar_Click(object sender, EventArgs e)
         {
-            frmAuxiliar modificar = new frmAuxiliar((Articulo)dgvPrincipal.CurrentRow.DataBoundItem);
-            modificar.ShowDialog();
-            cargar();
+            if (dgvPrincipal.CurrentRow != null)
+            {
+                frmAuxiliar modificar = new frmAuxiliar((Articulo)dgvPrincipal.CurrentRow.DataBoundItem);
+                modificar.ShowDialog();
+                cargar();
+                dgvLimpieza();
+
+            }
+            else
+            {
+                MessageBox.Show("Por favor, selecciona algún item de la lista.", "Error al seleccionar producto", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnDetalles_Click(object sender, EventArgs e)
         {
-            frmAuxiliar modificar = new frmAuxiliar((Articulo)dgvPrincipal.CurrentRow.DataBoundItem, 1);
+            if (dgvPrincipal.CurrentRow != null) { 
+                frmAuxiliar modificar = new frmAuxiliar((Articulo)dgvPrincipal.CurrentRow.DataBoundItem, 1);
             modificar.ShowDialog();
-            cargar();
+                dgvLimpieza();
+                cargar();
+            }
+            else 
+            {
+                MessageBox.Show("Por favor, selecciona algún item de la lista.","Error al seleccionar producto",MessageBoxButtons.OK,MessageBoxIcon.Error);    
+            }
         }
 
-        private void txtFiltro_TextChanged(object sender, EventArgs e)
+    private void txtFiltro_TextChanged(object sender, EventArgs e)
         {
             List<Articulo> listaFiltrada;
             string filtro = txtFiltro.Text.ToLower();
@@ -116,6 +175,7 @@ namespace TPFinalNivel2_Spalla
                 }
                 dgvPrincipal.DataSource = null;
                 dgvPrincipal.DataSource = listaFiltrada;
+                ocultarColumnas();
                 
             }
             catch (Exception ex)
@@ -137,5 +197,68 @@ namespace TPFinalNivel2_Spalla
         }
 
 
+        private void btnFiltrar_Click(object sender, EventArgs e)
+        {
+            int cat;
+            int marca;
+            if (cboCat.SelectedIndex == -1 && cboMarca.SelectedIndex != -1)
+            {
+                marca = cboMarca.SelectedIndex + 1;
+                dgvPrincipal.DataSource = negocio.filtroAvanzado(marca,1);
+            }
+            else if (cboMarca.SelectedIndex == -1 && cboCat.SelectedIndex != -1)
+            {
+                cat = cboCat.SelectedIndex + 1;
+                dgvPrincipal.DataSource = negocio.filtroAvanzado(cat, 2);
+            }
+            else if (cboMarca.SelectedIndex != -1 && cboCat.SelectedIndex != -1)
+            {
+                marca = cboMarca.SelectedIndex + 1;
+                cat = cboCat.SelectedIndex + 1;
+                dgvPrincipal.DataSource = negocio.filtroAvanzado(cat, 3, marca);
+            }
+            else
+                cargar();
+            
+        }
+
+        private void dgvLimpieza()
+        {
+            cboCat.SelectedIndex = -1;
+            cboMarca.SelectedIndex = -1;
+            txtFiltro.Text = string.Empty;
+            cargar();
+        }
+
+        private void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            dgvLimpieza();
+        }
+        private void btnCargar_Click(object sender, EventArgs e)
+        {
+            dgvLimpieza();
+        }
+
+        private void btnCancelar_Click(object sender, EventArgs e)
+        {
+            dgvLimpieza();
+        }
+
+        private void btnMarca_Click(object sender, EventArgs e)
+        {
+            ordenarLista(1);
+        }
+
+        private void btnCat_Click(object sender, EventArgs e)
+        {
+            ordenarLista(2);
+        }
+
+        private void btnPrecio_Click(object sender, EventArgs e)
+        {
+            ordenarLista(3);
+        }
+     
     }
 }
+

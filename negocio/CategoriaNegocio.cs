@@ -33,8 +33,8 @@ namespace negocio
 
                 throw ex;
             }
-            finally 
-            { 
+            finally
+            {
                 datos.cerrarConexion();
             }
         }
