@@ -32,7 +32,6 @@
             this.pboxImagen = new System.Windows.Forms.PictureBox();
             this.cboMarca = new System.Windows.Forms.ComboBox();
             this.cboCategoria = new System.Windows.Forms.ComboBox();
-            this.txtCodigo = new System.Windows.Forms.TextBox();
             this.txtNombre = new System.Windows.Forms.TextBox();
             this.txtDescripcion = new System.Windows.Forms.TextBox();
             this.txtPrecio = new System.Windows.Forms.TextBox();
@@ -46,6 +45,10 @@
             this.lblPrecio = new System.Windows.Forms.Label();
             this.btnAceptar = new System.Windows.Forms.Button();
             this.btnCancelar = new System.Windows.Forms.Button();
+            this.pageSetupDialog1 = new System.Windows.Forms.PageSetupDialog();
+            this.txtCodigo = new System.Windows.Forms.TextBox();
+            this.lblWarnCat = new System.Windows.Forms.Label();
+            this.lblWarnMarca = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pboxImagen)).BeginInit();
             this.SuspendLayout();
             // 
@@ -60,12 +63,15 @@
             // 
             // cboMarca
             // 
+            this.cboMarca.BackColor = System.Drawing.SystemColors.Window;
             this.cboMarca.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboMarca.ForeColor = System.Drawing.SystemColors.WindowText;
             this.cboMarca.FormattingEnabled = true;
             this.cboMarca.Location = new System.Drawing.Point(159, 183);
             this.cboMarca.Name = "cboMarca";
             this.cboMarca.Size = new System.Drawing.Size(221, 24);
-            this.cboMarca.TabIndex = 1;
+            this.cboMarca.TabIndex = 3;
+            this.cboMarca.Click += new System.EventHandler(this.cboMarca_Click);
             // 
             // cboCategoria
             // 
@@ -74,43 +80,41 @@
             this.cboCategoria.Location = new System.Drawing.Point(159, 233);
             this.cboCategoria.Name = "cboCategoria";
             this.cboCategoria.Size = new System.Drawing.Size(221, 24);
-            this.cboCategoria.TabIndex = 2;
-            // 
-            // txtCodigo
-            // 
-            this.txtCodigo.Location = new System.Drawing.Point(159, 52);
-            this.txtCodigo.Name = "txtCodigo";
-            this.txtCodigo.Size = new System.Drawing.Size(221, 22);
-            this.txtCodigo.TabIndex = 3;
+            this.cboCategoria.TabIndex = 4;
+            this.cboCategoria.Click += new System.EventHandler(this.cboCategoria_Click);
             // 
             // txtNombre
             // 
             this.txtNombre.Location = new System.Drawing.Point(159, 98);
             this.txtNombre.Name = "txtNombre";
             this.txtNombre.Size = new System.Drawing.Size(221, 22);
-            this.txtNombre.TabIndex = 4;
+            this.txtNombre.TabIndex = 1;
             // 
             // txtDescripcion
             // 
             this.txtDescripcion.Location = new System.Drawing.Point(159, 142);
             this.txtDescripcion.Name = "txtDescripcion";
             this.txtDescripcion.Size = new System.Drawing.Size(221, 22);
-            this.txtDescripcion.TabIndex = 5;
+            this.txtDescripcion.TabIndex = 2;
             // 
             // txtPrecio
             // 
+            this.txtPrecio.ForeColor = System.Drawing.SystemColors.WindowText;
             this.txtPrecio.Location = new System.Drawing.Point(159, 320);
             this.txtPrecio.Name = "txtPrecio";
             this.txtPrecio.Size = new System.Drawing.Size(221, 22);
             this.txtPrecio.TabIndex = 6;
+            this.txtPrecio.Click += new System.EventHandler(this.txtPrecio_Click);
+            this.txtPrecio.TextChanged += new System.EventHandler(this.txtPrecio_TextChanged);
             // 
             // txtImagen
             // 
             this.txtImagen.Location = new System.Drawing.Point(159, 278);
             this.txtImagen.Name = "txtImagen";
             this.txtImagen.Size = new System.Drawing.Size(221, 22);
-            this.txtImagen.TabIndex = 7;
-            this.txtImagen.TextChanged += new System.EventHandler(this.txtImagen_TextChanged);
+            this.txtImagen.TabIndex = 5;
+            this.txtImagen.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtImagen_KeyPress);
+            this.txtImagen.Leave += new System.EventHandler(this.txtImagen_Leave);
             // 
             // lblCodigo
             // 
@@ -201,7 +205,7 @@
             this.btnAceptar.Location = new System.Drawing.Point(140, 379);
             this.btnAceptar.Name = "btnAceptar";
             this.btnAceptar.Size = new System.Drawing.Size(133, 54);
-            this.btnAceptar.TabIndex = 15;
+            this.btnAceptar.TabIndex = 7;
             this.btnAceptar.Text = "Aceptar";
             this.btnAceptar.UseVisualStyleBackColor = false;
             this.btnAceptar.Click += new System.EventHandler(this.btnAgregar_Click);
@@ -218,10 +222,46 @@
             this.btnCancelar.Location = new System.Drawing.Point(446, 379);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(133, 54);
-            this.btnCancelar.TabIndex = 16;
+            this.btnCancelar.TabIndex = 8;
             this.btnCancelar.Text = "Cancelar";
             this.btnCancelar.UseVisualStyleBackColor = false;
             this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
+            // 
+            // txtCodigo
+            // 
+            this.txtCodigo.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.txtCodigo.Location = new System.Drawing.Point(159, 53);
+            this.txtCodigo.Name = "txtCodigo";
+            this.txtCodigo.Size = new System.Drawing.Size(221, 22);
+            this.txtCodigo.TabIndex = 0;
+            this.txtCodigo.Click += new System.EventHandler(this.txtCodigo_Click);
+            this.txtCodigo.TextChanged += new System.EventHandler(this.txtCodigo_TextChanged);
+            // 
+            // lblWarnCat
+            // 
+            this.lblWarnCat.AutoSize = true;
+            this.lblWarnCat.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(242)))), ((int)(((byte)(250)))));
+            this.lblWarnCat.Font = new System.Drawing.Font("Arial", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblWarnCat.ForeColor = System.Drawing.Color.Red;
+            this.lblWarnCat.Location = new System.Drawing.Point(180, 259);
+            this.lblWarnCat.Name = "lblWarnCat";
+            this.lblWarnCat.Size = new System.Drawing.Size(163, 16);
+            this.lblWarnCat.TabIndex = 15;
+            this.lblWarnCat.Text = "Debes elegir una Categoria";
+            this.lblWarnCat.Visible = false;
+            // 
+            // lblWarnMarca
+            // 
+            this.lblWarnMarca.AutoSize = true;
+            this.lblWarnMarca.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(242)))), ((int)(((byte)(250)))));
+            this.lblWarnMarca.Font = new System.Drawing.Font("Arial", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblWarnMarca.ForeColor = System.Drawing.Color.Red;
+            this.lblWarnMarca.Location = new System.Drawing.Point(180, 210);
+            this.lblWarnMarca.Name = "lblWarnMarca";
+            this.lblWarnMarca.Size = new System.Drawing.Size(144, 16);
+            this.lblWarnMarca.TabIndex = 16;
+            this.lblWarnMarca.Text = "Debes elegir una Marca";
+            this.lblWarnMarca.Visible = false;
             // 
             // frmAuxiliar
             // 
@@ -229,6 +269,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(242)))), ((int)(((byte)(250)))));
             this.ClientSize = new System.Drawing.Size(697, 449);
+            this.Controls.Add(this.lblWarnMarca);
+            this.Controls.Add(this.lblWarnCat);
+            this.Controls.Add(this.txtCodigo);
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.btnAceptar);
             this.Controls.Add(this.lblPrecio);
@@ -242,7 +285,6 @@
             this.Controls.Add(this.txtPrecio);
             this.Controls.Add(this.txtDescripcion);
             this.Controls.Add(this.txtNombre);
-            this.Controls.Add(this.txtCodigo);
             this.Controls.Add(this.cboCategoria);
             this.Controls.Add(this.cboMarca);
             this.Controls.Add(this.pboxImagen);
@@ -262,7 +304,6 @@
         private System.Windows.Forms.PictureBox pboxImagen;
         private System.Windows.Forms.ComboBox cboMarca;
         private System.Windows.Forms.ComboBox cboCategoria;
-        private System.Windows.Forms.TextBox txtCodigo;
         private System.Windows.Forms.TextBox txtNombre;
         private System.Windows.Forms.TextBox txtDescripcion;
         private System.Windows.Forms.TextBox txtPrecio;
@@ -276,5 +317,9 @@
         private System.Windows.Forms.Label lblPrecio;
         private System.Windows.Forms.Button btnAceptar;
         private System.Windows.Forms.Button btnCancelar;
+        private System.Windows.Forms.PageSetupDialog pageSetupDialog1;
+        private System.Windows.Forms.TextBox txtCodigo;
+        private System.Windows.Forms.Label lblWarnCat;
+        private System.Windows.Forms.Label lblWarnMarca;
     }
 }

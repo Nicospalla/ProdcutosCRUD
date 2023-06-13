@@ -7,6 +7,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Net.Mime.MediaTypeNames;
@@ -70,53 +71,113 @@ namespace TPFinalNivel2_Spalla
 
         private void btnAgregar_Click(object sender, EventArgs e)
         {
-            
 
+            Boolean validado = true;
             ArticuloNegocio negocio = new ArticuloNegocio();
+            
             if (modificar == null)
                 modificar = new Articulo();
-           
+            if(txtCodigo.Text == "")
+            {
+                validado= false;
+                txtCodigo.BackColor = Color.Red;
+            }
+            else
+            {
                 modificar.Codigo = txtCodigo.Text;
-                modificar.Nombre = txtNombre.Text;
-                modificar.Descripcion = txtDescripcion.Text;
-            modificar.Marca = (Marca)cboMarca.SelectedItem;
+            }
+            modificar.Nombre = txtNombre.Text;
+            modificar.Descripcion = txtDescripcion.Text;
+            if(cboCategoria.SelectedIndex == -1 || cboMarca.SelectedIndex == -1)
+            {
+                validado= false;
+                if(cboCategoria.SelectedIndex == -1)
+                    lblWarnCat.Visible = true;
+                else if(cboMarca.SelectedIndex == -1)
+                    lblWarnMarca.Visible = true;
+            }
+            else
+            {
+                modificar.Marca = (Marca)cboMarca.SelectedItem;
                 modificar.Categoria = (Categoria)cboCategoria.SelectedItem;
-                modificar.UrlImagen = txtImagen.Text;
-                if (txtPrecio.Text.Contains("."))
-                    modificar.Precio = Decimal.Parse(txtPrecio.Text.Replace(".", ","));
-                else
-                    modificar.Precio = Decimal.Parse(txtPrecio.Text);
-            
-            frmPrincipal frm = new frmPrincipal();
-
-            try
+            }
+            modificar.UrlImagen = txtImagen.Text;
+            if (txtPrecio.Text == "")
             {
-                if (banderaDetalles == 0)
+                validado = false;
+                txtPrecio.BackColor = Color.Red;
+            }
+            else
+            {
+                string precioCuidado = "";
+                if (txtPrecio.Text.Contains(".") || txtPrecio.Text.Contains(" "))
                 {
-                    if (modificar.Id == 0)
-                        negocio.agregarArg(modificar);
-                    else
-                        negocio.modificarArg(modificar);
+                    precioCuidado = txtPrecio.Text.Replace(".", ",");
+                    precioCuidado = txtPrecio.Text.Replace(" ", "");
                 }
+                else
+                    precioCuidado = txtPrecio.Text;
+
+                if (validaNumeros(precioCuidado))
+                {
+                    modificar.Precio = Decimal.Parse(precioCuidado);
+                }
+                else
+                {
+                    txtPrecio.BackColor = Color.Red;
+                    validado = false;
+                }
+            }
+            if (validado == false)
+            {
+                MessageBox.Show("Por favor, corrige las alertas antes de proseguir.", "Error de datos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                frmPrincipal frm = new frmPrincipal();
+
+                try
+                {
+                    if (banderaDetalles == 0)
+                    {
+                        if (modificar.Id == 0)
+                            negocio.agregarArg(modificar);
+                        else
+                            negocio.modificarArg(modificar);
+                    }
                 
-                this.Close();
+                    this.Close();
 
-            }
-            catch (Exception ex)
-            {
+                }
+                catch (Exception ex)
+                {
 
-                throw ex;
-            }
-            finally
-            {
-                datos.cerrarConexion();
+                    throw ex;
+                }
+                finally
+                {
+                    datos.cerrarConexion();
+                }
             }
         }
 
-        private void txtImagen_TextChanged(object sender, EventArgs e)
+        private Boolean validaNumeros(string cadena)
         {
-            string imagen = txtImagen.Text;
-            cargarImg(imagen);
+            char[] caracteres = cadena.ToCharArray();
+            int bandera = 0;
+            foreach (char c in caracteres)
+            {
+
+                if (!char.IsDigit(c) && !(char.IsPunctuation(c) || char.IsSeparator(c)))
+                    return false;
+                else if (char.IsPunctuation(c) || char.IsSeparator(c))
+                    bandera++;
+            }
+            if (bandera > 1)
+                return false;
+            else
+                return true;
+
         }
 
         private void cargarImg(string imagen)
@@ -135,6 +196,50 @@ namespace TPFinalNivel2_Spalla
         {
             this.Close();
         }
+
+        private void txtPrecio_TextChanged(object sender, EventArgs e)
+        {
+            txtPrecio.BackColor = SystemColors.Window;
+        }
+
+        private void txtPrecio_Click(object sender, EventArgs e)
+        {
+            txtPrecio.BackColor = SystemColors.Window;
+        }
+
+        private void cboMarca_Click(object sender, EventArgs e)
+        {
+            lblWarnMarca.Visible = false;
+        }
+
+        private void cboCategoria_Click(object sender, EventArgs e)
+        {
+            lblWarnCat.Visible = false;
+        }
+
+        private void txtCodigo_TextChanged(object sender, EventArgs e)
+        {
+            txtCodigo.BackColor = SystemColors.Window;
+        }
+
+        private void txtCodigo_Click(object sender, EventArgs e)
+        {
+            txtCodigo.BackColor= SystemColors.Window;
+        }
+
+        private void txtImagen_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if(e.KeyChar == (char)Keys.Enter)
+            {
+                cargarImg(txtImagen.Text);
+            }
+        }
+
+        private void txtImagen_Leave(object sender, EventArgs e)
+        {
+            cargarImg(txtImagen.Text);
+        }
+
 
     }
 }

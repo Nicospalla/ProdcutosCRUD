@@ -96,6 +96,7 @@ namespace TPFinalNivel2_Spalla
         {
             ArticuloNegocio negocio = new ArticuloNegocio();
             Articulo seleccionado;
+            dgvPrincipal.Focus();
             if (dgvPrincipal.CurrentRow != null)
             {
                 try
@@ -131,6 +132,7 @@ namespace TPFinalNivel2_Spalla
 
         private void btnModificar_Click(object sender, EventArgs e)
         {
+            dgvPrincipal.Focus();
             if (dgvPrincipal.CurrentRow != null)
             {
                 frmAuxiliar modificar = new frmAuxiliar((Articulo)dgvPrincipal.CurrentRow.DataBoundItem);
@@ -147,6 +149,7 @@ namespace TPFinalNivel2_Spalla
 
         private void btnDetalles_Click(object sender, EventArgs e)
         {
+            dgvPrincipal.Focus();
             if (dgvPrincipal.CurrentRow != null) { 
                 frmAuxiliar modificar = new frmAuxiliar((Articulo)dgvPrincipal.CurrentRow.DataBoundItem, 1);
             modificar.ShowDialog();
